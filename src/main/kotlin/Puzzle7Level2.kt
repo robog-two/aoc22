@@ -10,11 +10,6 @@ object Puzzle7Level2 : PuzzleSolver {
         val spaceLeft = 70000000 - directorySizes["/"]!! // yum :P
         val spaceNeeded = 30000000 - spaceLeft
 
-        println(directorySizes["/"]!!)
-        println(spaceNeeded)
-        println(spaceLeft)
-        println(directorySizes)
-
         return directorySizes.map { Pair(it.key, it.value) }.sortedByDescending { it.second }.last { it.second >= spaceNeeded }.second.toString()
     }
 }

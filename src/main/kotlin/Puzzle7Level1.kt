@@ -1,6 +1,6 @@
-import Puzzle5Level1.extractBoard
-import Puzzle6Level1.hasDupe
 import java.nio.file.Path
+import kotlin.math.max
+import kotlin.properties.Delegates
 
 object Puzzle7Level1 : PuzzleSolver {
     override fun solve(puzzle: String): String {
@@ -11,14 +11,13 @@ object Puzzle7Level1 : PuzzleSolver {
 
     fun getDirectorySizes(puzzle: String): MutableMap<String, Int> {
         val consoleLines = puzzle.trim().split("\n")
-        var currentPath = Path.of("/")
-        var currentSize = 0
+        var currentPath: Path
+        var currentSize: Int
         val directorySizes = mutableMapOf<String, Int>()
-        var keepSearching = true
-        // This is the definition of insanity.
-        // TODO: refactor to not be insane.
-        for (i in 1..100000) {
-            keepSearching = false
+        var lastSizeOfRoot = 0
+        // TODO: rm next ln debug
+        do {
+            lastSizeOfRoot = directorySizes["/"] ?: 0
             currentPath = Path.of("/")
             currentSize = 0
             var maxRecurse = 0
@@ -46,18 +45,18 @@ object Puzzle7Level1 : PuzzleSolver {
                             currentSize += line.split(" ").first().toInt()
                         } else {
                             currentSize += directorySizes.getOrElse(Path.of(currentPath.toAbsolutePath().toString(), line.split(" ").last()).toAbsolutePath().toString()) {
-                                keepSearching = true
                                 0
                             }
                         }
                     }
                 }
             }
+
             if (currentSize > 0) {
                 directorySizes[currentPath.toAbsolutePath().toString()] = currentSize
                 currentSize = 0
             }
-        }
+        } while (directorySizes["/"] != lastSizeOfRoot)
 
         return directorySizes
     }
