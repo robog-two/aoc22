@@ -1,6 +1,4 @@
 import java.nio.file.Path
-import kotlin.math.max
-import kotlin.properties.Delegates
 
 object Puzzle7Level1 : PuzzleSolver {
     override fun solve(puzzle: String): String {
@@ -14,13 +12,11 @@ object Puzzle7Level1 : PuzzleSolver {
         var currentPath: Path
         var currentSize: Int
         val directorySizes = mutableMapOf<String, Int>()
-        var lastSizeOfRoot = 0
-        // TODO: rm next ln debug
+        var lastSizeOfRoot: Int
         do {
             lastSizeOfRoot = directorySizes["/"] ?: 0
             currentPath = Path.of("/")
             currentSize = 0
-            var maxRecurse = 0
             for (line in consoleLines) {
                 when {
                     line.startsWith("$ cd ") -> {
@@ -28,7 +24,7 @@ object Puzzle7Level1 : PuzzleSolver {
                             directorySizes[currentPath.toAbsolutePath().toString()] = currentSize
                             currentSize = 0
                         }
-                        var moveTo = line.substring(5, line.length)
+                        val moveTo = line.substring(5, line.length)
                         if (moveTo == "..") {
                             currentPath = currentPath.parent
                         } else {
@@ -54,7 +50,6 @@ object Puzzle7Level1 : PuzzleSolver {
 
             if (currentSize > 0) {
                 directorySizes[currentPath.toAbsolutePath().toString()] = currentSize
-                currentSize = 0
             }
         } while (directorySizes["/"] != lastSizeOfRoot)
 
